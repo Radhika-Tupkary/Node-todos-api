@@ -22,7 +22,12 @@ MongoClient.connect('mongodb://localhost:27017/TodoApp', (err, db) => {
     // db.close();
 });
 
+/*
+Notes:
+1. db.collection('Todos').find() returns a cursor (think of it like a pointer).
+Then you can use any cursor method on it like toArray()
 
+*/
 
 
 
