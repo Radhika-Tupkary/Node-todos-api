@@ -1,10 +1,11 @@
 const expect = require('expect');
 const request = require('supertest');
-
+const {ObjectID} = require('mongodb');
 const {app} = require('./../server');
 const {Todo} = require('./../models/todo');
+const {User} = require('./../models/user');
 
-const todoArray = [{text:'First test todo'}, {text: 'Second test todo'}];
+const todoArray = [{text:'First test todo', _id:new ObjectID()}, {_id:new ObjectID(), text: 'Second test todo'}];
 
 beforeEach((done) => {
   Todo.remove({}).then(() => Todo.insertMany(todoArray))
@@ -70,16 +71,39 @@ describe('GET /todos', () => {
 
 describe('GET /todos/:id', () => {
   it('should fetch one todo', (done) => {
-    let _id = '5a9310e9a6857e519df9aff1';
+    let _id = todoArray[0]._id.toHexString();
     request(app)
       .get(`/todos/${_id}`)
       .expect(200)
       .expect((res) => {
-        expect(res.body.todo).toMatchObject({_id})
+        expect(res.body.todo).toMatchObject({_id:_id, text:todoArray[0].text})
       })
       .end(done());
   });
-})
+
+  it('should return 404 because ID even though valid does not exist', (done) => {
+    let id = new ObjectID().toHexString();
+    request(app)
+      .get(`/todos/${id}`)
+      .expect(404)
+      .expect((res) => {
+        expect(res.body).toBeNull();
+      })
+      .end(done());
+  });
+
+  it('should return 404 because ID is invalid', (done) => {
+    let id = 'ac1';
+    reques(app)
+      .get(`/todos/${id}`)
+      .expect(404)
+      .expect((res) => {
+        expect(res.body).toBeNull();
+      })
+      .end(done());
+  });
+
+});
 
 describe('DELETE /todos/:id', () => {
   it('should delete a todo', (done) => {

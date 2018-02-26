@@ -6,6 +6,7 @@ const {ObjectID} = require('mongodb');
 const express = require('express');
 const bodyParser = require('body-parser');
 
+const port = process.env.PORT || 3000;
 let app = express();
 
 app.use(bodyParser.json());      // middleware to fetch json data from body of POST
@@ -34,7 +35,6 @@ app.get('/todos', (req, res) => {
 });
 
 app.get('/todos/:id', (req, res) => {
-  console.log(`req.params.id : ${req.params.id}`);
 
   if(!ObjectID.isValid(req.params.id)) {
     return res.status(404).send();
@@ -85,8 +85,8 @@ app.get('/users/:id', (req, res) => {
   }).catch((e) => console.log(e));
 });
 
-app.listen(3000, (req, res) => {
-  console.log(`server is up and running on port 3000!`);
+app.listen(port, (req, res) => {
+  console.log(`server is up and running on port ${port}!`);
 });
 
 module.exports = {app};
