@@ -107,20 +107,49 @@ describe('GET /todos/:id', () => {
 
 describe('DELETE /todos/:id', () => {
   it('should delete a todo', (done) => {
-    let _id = '5a92f75cd8e800507af3157e';
+    let _id = todoArray[1]._id.toHexString();
     request(app)
       .delete(`/todos/${_id}`)
       .expect(200)
       .expect((res) => {
-        expect(res.body.todo).toMatchObject({"n":1, "ok":1})
+        expect(res.body.todo._id).toBe(_id)
       })
-      .end((err,res) => {
-          if(err) {
-            return done(err);
-          }
+      .end((err, res) => {
+        if (err) {
+          return done(err);
+        }
+
+        // ensuring that todo got deleted from the collection properly
+
+        Todo.findById(_id).then((todos) => {
+          expect(todos).toNotExist();
           done();
-      })
+        }).catch((e) => done(e));
+      });
   });
+
+  it('should return 404 because ID even though valid does not exist', (done) => {
+    let id = new ObjectID().toHexString();
+    request(app)
+      .delete(`/todos/${id}`)
+      .expect(404)
+      .expect((res) => {
+        expect(res.body).toBeNull();
+      })
+      .end(done());
+  });
+
+  it('should return 404 because ID is invalid', (done) => {
+    let id = 'ac1';
+    reques(app)
+      .delete(`/todos/${id}`)
+      .expect(404)
+      .expect((res) => {
+        expect(res.body).toBeNull();
+      })
+      .end(done());
+  });
+
 });
 
 describe('PUT /todos/:id', () => {
