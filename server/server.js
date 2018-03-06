@@ -4,11 +4,23 @@ const {User} = require('./models/user');
 
 const _ = require('lodash');
 
+let env = process.env.NODE_ENV || 'development';
+
+console.log(`env ***** ${env}`);
+
+if(env === 'development'){
+  process.env.PORT = 3000;
+  process.env.MONGODB_URI = 'mongodb://localhost:27017/TodoApp';
+} else if(env === 'test') {
+  process.env.PORT = 3000;
+  process.env.MONGODB_URI = 'mongodb://localhost:27017/TodoAppTest';
+}
+
 const {ObjectID} = require('mongodb');
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT;
 let app = express();
 
 app.use(bodyParser.json());      // middleware to fetch json data from body of POST
@@ -72,7 +84,7 @@ app.delete('/todos/:id', (req, res) => {
 app.patch('/todos/:id', (req, res) => {
   let id = req.params.id;
 
-  let body = _.pick(req.body, ['text', 'completed']);
+  let body = _.pick(req.body, ['text', 'completed']);   // making sure that user does not update anything other than text and completed
 
   if(!ObjectID.isValid(req.params.id)) {
     return res.status(404).send();
@@ -86,6 +98,11 @@ app.patch('/todos/:id', (req, res) => {
   }
 
   Todo.findByIdAndUpdate(id, {$set:body}, {new: true}).then((todo) => {
+
+    if(!todo){                          // means todo does not exist
+      return res.status(404).send();
+    }
+
     res.send({todo});
   }, (e) => {
     res.status(400).send(e);

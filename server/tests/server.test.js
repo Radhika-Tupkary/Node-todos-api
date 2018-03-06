@@ -5,7 +5,7 @@ const {app} = require('./../server');
 const {Todo} = require('./../models/todo');
 const {User} = require('./../models/user');
 
-const todoArray = [{text:'First test todo', _id:new ObjectID()}, {_id:new ObjectID(), text: 'Second test todo'}];
+const todoArray = [{text:'First test todo', _id:new ObjectID()}, {_id:new ObjectID(), text: 'Second test todo', completed:true, completedAt: 333}];
 
 beforeEach((done) => {
   Todo.remove({}).then(() => Todo.insertMany(todoArray))
@@ -14,7 +14,7 @@ beforeEach((done) => {
 
 describe('POST /todos', () => {
   it('should create a new todo', (done) => {
-    var text = 'Test todo text';
+    let text = 'Test todo text';
 
     request(app)
       .post('/todos')
@@ -152,20 +152,36 @@ describe('DELETE /todos/:id', () => {
 
 });
 
-describe('PUT /todos/:id', () => {
+describe('PATCH /todos/:id', () => {
+
   it('should update a todo', (done) => {
-    let _id = '5a92f75cd8e800507af3157e';
+    let _id = todoArray[0]._id.toHexString();
+    let obj = {text:'updated text', completed:true};
     request(app)
-      .put(`/todos/${_id}`)
+      .patch(`/todos/${_id}`)
+      .send(obj)
       .expect(200)
       .expect((res) => {
-        expect(res).toMatchObject({"n":1, "ok":1})
+        expect(res.body.todo.text).toBe(text)
+        expect(res.body.todo.completed).toBe(true)
+        expect(res.body.todo.completedAt).toBeA('number')
       })
-      .end((err,res) => {
-          if(err) {
-            return done(err);
-          }
-          done();
-      })
+      .end(done);
   });
+
+  it('should clear completedAt when todo is not completed', (done) => {
+    let _id = todoArray[1]._id.toHexString();
+    let obj = {text:'different text', completed:false};
+    request(app)
+      .patch(`/todos/${_id}`)
+      .send(obj)
+      .expect(200)
+      .expect((res) => {
+        expect(res.body.text).toBe(text)
+        expect(res.body.completed).toBe(false)
+        expect(res.body.completedAt).toNotExist()
+      })
+      .end(done);
+  });
+
 });
