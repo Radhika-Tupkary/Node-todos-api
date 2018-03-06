@@ -1,12 +1,4 @@
-const {mongoose} = require('./db/mongoose');
-const {Todo} = require('./models/todo');
-const {User} = require('./models/user');
-
-const _ = require('lodash');
-
 let env = process.env.NODE_ENV || 'development';
-
-console.log(`env ***** ${env}`);
 
 if(env === 'development'){
   process.env.PORT = 3000;
@@ -15,6 +7,12 @@ if(env === 'development'){
   process.env.PORT = 3000;
   process.env.MONGODB_URI = 'mongodb://localhost:27017/TodoAppTest';
 }
+
+const {mongoose} = require('./db/mongoose');
+const {Todo} = require('./models/todo');
+const {User} = require('./models/user');
+
+const _ = require('lodash');
 
 const {ObjectID} = require('mongodb');
 const express = require('express');

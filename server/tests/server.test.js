@@ -8,8 +8,9 @@ const {User} = require('./../models/user');
 const todoArray = [{text:'First test todo', _id:new ObjectID()}, {_id:new ObjectID(), text: 'Second test todo', completed:true, completedAt: 333}];
 
 beforeEach((done) => {
-  Todo.remove({}).then(() => Todo.insertMany(todoArray))
-  .then(() => done());
+  Todo.remove({}).then(() => {
+    return Todo.insertMany(todoArray);
+  }).then(() => done());
 });
 
 describe('POST /todos', () => {
