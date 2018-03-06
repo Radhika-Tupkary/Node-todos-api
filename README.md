@@ -1,10 +1,10 @@
 # Node-Todo-API
 
-The project is still in progress. 
+The project is still in progress, but following is the progress as of now. 
 
-Its a todo application using Node.js, Express.js, MongoDB. 
+Its a todo application using **Node.js, Express.js, and MongoDB**. 
 
-The endpoints are for  
+The RESTful endpoints for the project are as follows  
 
 1. To get all todos :           GET /todos      (https://tranquil-plateau-37234.herokuapp.com/todos)
 2. To get a single todo:        GET /todos/:id 
@@ -14,7 +14,7 @@ The endpoints are for
 
 All the endpoints are tested using Expect.js, Mocha and Supertest.
 
-The application is hosted on heroku and the endpoints can be tested at the following base url using Postman.
+The application is hosted on heroku and the endpoints can be tested at the following base url using Postman (Postman - an application that simplifies sending HTTP requests).
 
 https://tranquil-plateau-37234.herokuapp.com 
 
