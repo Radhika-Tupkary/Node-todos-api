@@ -1,4 +1,4 @@
-# node-todo-api
+# Node-Todo-API
 
 The project is still in progress. 
 
