@@ -87,9 +87,6 @@ describe('GET /todos/:id', () => {
     request(app)
       .get(`/todos/${id}`)
       .expect(404)
-      .expect((res) => {
-        expect(res.body).toBeNull();
-      })
       .end(done);
   });
 
@@ -98,9 +95,6 @@ describe('GET /todos/:id', () => {
     request(app)
       .get(`/todos/${id}`)
       .expect(404)
-      .expect((res) => {
-        expect(res.body).toBeNull();
-      })
       .end(done);
   });
 
@@ -122,8 +116,8 @@ describe('DELETE /todos/:id', () => {
 
         // ensuring that todo got deleted from the collection properly
 
-        Todo.findById(_id).then((todos) => {
-          expect(todos).toNotExist();
+        Todo.findById(_id).then((todo) => {
+          expect(todo).toBeFalsy();
           done();
         }).catch((e) => done(e));
       });
@@ -134,9 +128,6 @@ describe('DELETE /todos/:id', () => {
     request(app)
       .delete(`/todos/${id}`)
       .expect(404)
-      .expect((res) => {
-        expect(res.body).toBeNull();
-      })
       .end(done);
   });
 
@@ -145,9 +136,6 @@ describe('DELETE /todos/:id', () => {
     request(app)
       .delete(`/todos/${id}`)
       .expect(404)
-      .expect((res) => {
-        expect(res.body).toBeNull();
-      })
       .end(done);
   });
 
@@ -165,7 +153,7 @@ describe('PATCH /todos/:id', () => {
       .expect((res) => {
         expect(res.body.todo.text).toBe(obj.text)
         expect(res.body.todo.completed).toBe(true)
-        expect(res.body.todo.completedAt).toBeA('number')
+        expect(typeof res.body.todo.completedAt).toBe('number')
       })
       .end(done);
   });
@@ -180,7 +168,7 @@ describe('PATCH /todos/:id', () => {
       .expect((res) => {
         expect(res.body.todo.text).toBe(obj.text)
         expect(res.body.todo.completed).toBe(false)
-        expect(res.body.todo.completedAt).toNotExist()
+        expect(res.body.todo.completedAt).toBeFalsy()
       })
       .end(done);
   });
