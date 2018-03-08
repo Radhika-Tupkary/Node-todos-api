@@ -24,8 +24,6 @@ let app = express();
 app.use(bodyParser.json());      // middleware to fetch json data from body of POST
 
 app.post('/todos', (req, res) => {
-  console.log(req.body);
-
   let todoSample = new Todo({
     text:req.body.text
   });
@@ -108,8 +106,6 @@ app.patch('/todos/:id', (req, res) => {
 });
 
 app.get('/users/:id', (req, res) => {
-  console.log(`req.params.id : ${req.params.id}`);
-
   if(!ObjectID.isValid(req.params.id)) {
     return res.send('Id not valid');
   }
@@ -123,6 +119,21 @@ app.get('/users/:id', (req, res) => {
     res.status(400).send(e);
   }).catch((e) => console.log(e));
 });
+
+app.post('/users', (req, res) => {
+
+  let body = _.pick(req.body, ['email', 'password']);
+  let user = new User({email:body.email, password:body.password});
+
+  user.save().then(() => {
+    return user.generateAuthToken();
+  }).then((token) => {
+    res.header('x-auth', token).send(user);
+  }).catch((e) => {
+    res.status(400).send(e);
+  });
+
+})
 
 app.listen(port, (req, res) => {
   console.log(`server is up and running on port ${port}!`);

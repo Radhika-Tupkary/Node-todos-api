@@ -66,7 +66,7 @@ describe('GET /todos', () => {
         expect(res.body.todos.length).toBe(2)
         expect(res.body.todos[0]).toMatchObject({text:todoArray[0].text});
       })
-      .end(done());
+      .end(done);
   });
 });
 
@@ -79,7 +79,7 @@ describe('GET /todos/:id', () => {
       .expect((res) => {
         expect(res.body.todo).toMatchObject({_id:_id, text:todoArray[0].text})
       })
-      .end(done());
+      .end(done);
   });
 
   it('should return 404 because ID even though valid does not exist', (done) => {
@@ -90,18 +90,18 @@ describe('GET /todos/:id', () => {
       .expect((res) => {
         expect(res.body).toBeNull();
       })
-      .end(done());
+      .end(done);
   });
 
   it('should return 404 because ID is invalid', (done) => {
     let id = 'ac1';
-    reques(app)
+    request(app)
       .get(`/todos/${id}`)
       .expect(404)
       .expect((res) => {
         expect(res.body).toBeNull();
       })
-      .end(done());
+      .end(done);
   });
 
 });
@@ -137,18 +137,18 @@ describe('DELETE /todos/:id', () => {
       .expect((res) => {
         expect(res.body).toBeNull();
       })
-      .end(done());
+      .end(done);
   });
 
   it('should return 404 because ID is invalid', (done) => {
     let id = 'ac1';
-    reques(app)
+    request(app)
       .delete(`/todos/${id}`)
       .expect(404)
       .expect((res) => {
         expect(res.body).toBeNull();
       })
-      .end(done());
+      .end(done);
   });
 
 });
@@ -163,7 +163,7 @@ describe('PATCH /todos/:id', () => {
       .send(obj)
       .expect(200)
       .expect((res) => {
-        expect(res.body.todo.text).toBe(text)
+        expect(res.body.todo.text).toBe(obj.text)
         expect(res.body.todo.completed).toBe(true)
         expect(res.body.todo.completedAt).toBeA('number')
       })
@@ -178,9 +178,9 @@ describe('PATCH /todos/:id', () => {
       .send(obj)
       .expect(200)
       .expect((res) => {
-        expect(res.body.text).toBe(text)
-        expect(res.body.completed).toBe(false)
-        expect(res.body.completedAt).toNotExist()
+        expect(res.body.todo.text).toBe(obj.text)
+        expect(res.body.todo.completed).toBe(false)
+        expect(res.body.todo.completedAt).toNotExist()
       })
       .end(done);
   });
