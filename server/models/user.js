@@ -47,7 +47,26 @@ UserSchema.methods.generateAuthToken = function() {  // not using ARROW function
   return user.save().then(() => {
     return token
   });
-}
+};
+
+UserSchema.statics.findByToken = function(token) {
+  let User = this;
+  let decoded;
+
+  try {
+    decoded = jwt.verify(token, 'pqr987');
+  } catch(e) {
+    return new Promise((resolve, reject) => {
+      reject();
+    })
+  }
+
+  return User.findOne({
+    '_id':decoded._id,
+    'tokens.token': token,
+    'tokens.access':'auth'
+  });
+};
 
 let User = mongoose.model('User', UserSchema);
 
