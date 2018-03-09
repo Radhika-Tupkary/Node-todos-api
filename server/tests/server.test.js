@@ -5,13 +5,10 @@ const {app} = require('./../server');
 const {Todo} = require('./../models/todo');
 const {User} = require('./../models/user');
 
-const todoArray = [{text:'First test todo', _id:new ObjectID()}, {_id:new ObjectID(), text: 'Second test todo', completed:true, completedAt: 333}];
+const {todoArray, populateTodos, usersArray, populateUsers} = require('./seed/seed');
 
-beforeEach((done) => {
-  Todo.remove({}).then(() => {
-    return Todo.insertMany(todoArray);
-  }).then(() => done());
-});
+beforeEach(populateTodos);
+beforeEach(populateUsers);
 
 describe('POST /todos', () => {
   it('should create a new todo', (done) => {
