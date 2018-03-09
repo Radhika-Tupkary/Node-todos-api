@@ -262,16 +262,7 @@ describe('POST /users/login', () => {
       .expect((res) => {
         expect(res.header['x-auth']).toBeTruthy()
       })
-      .end((err,res) => {
-        if(err) {
-          return done(err);
-        }
-
-        User.findById(usersArray[1]._id).then((user) => {
-          expect(user.tokens[0].token).toBe(res.header['x-auth'])
-          done();
-        }).catch((e) => done(e));
-      });
+      .end(done);
   });
 
   it('should return 400 if invalid credentials', (done) => {
