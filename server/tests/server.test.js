@@ -4,6 +4,8 @@ const {ObjectID} = require('mongodb');
 const {app} = require('./../server');
 const {Todo} = require('./../models/todo');
 const {User} = require('./../models/user');
+const jwt = require('jsonwebtoken');
+
 
 const {todoArray, populateTodos, usersArray, populateUsers} = require('./seed/seed');
 
@@ -277,4 +279,40 @@ describe('POST /users/login', () => {
       })
       .end(done);
   });
+});
+
+describe('DELETE /users/me/token', () => {
+  it('should remove auth token on logout', (done) => {
+    let token = usersArray[0].tokens[0].token;
+    request(app)
+      .delete(`/users/me/token`)
+      .set('x-auth', token)
+      .expect(200)
+      .expect((res) => {
+        expect(res.body).toEqual({})
+      })
+      .end((err, res) => {
+        if (err) {
+          return done(err);
+        }
+        // ensuring that token was removed from the document properly
+        User.findById(usersArray[0]._id).then((user) => {
+          expect(user.tokens.length).toBe(0);
+          done();
+        }).catch((e) => done(e));
+      });
+  });
+
+  it('should return 401 if token does not exist', (done) => {
+    let token = jwt.sign({_id:new ObjectID(), access: 'auth'}, 'pqrs987').toString();
+    request(app)
+      .delete(`/users/me/token`)
+      .set('x-auth', token)
+      .expect(401)
+      .expect((res) => {
+        expect(res.body).toEqual({})
+      })
+      .end(done);
+  });
+
 });
