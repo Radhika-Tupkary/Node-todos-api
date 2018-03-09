@@ -12,6 +12,7 @@ const {mongoose} = require('./db/mongoose');
 const {Todo} = require('./models/todo');
 const {User} = require('./models/user');
 const {authenticate} = require('./middleware/authenticate');
+const bcrypt = require('bcryptjs');
 
 const _ = require('lodash');
 
@@ -140,7 +141,16 @@ app.post('/users', (req, res) => {
 
 });
 
+app.post('/users/login', (req, res) => {
+  let body = _.pick(req.body, ['email', 'password']);
 
+  User.findByCredentials(body.email, body.password).then((user) => {
+    return user.generateAuthToken().then((token) => {
+      res.header('x-auth', token).send(user);
+    });
+  }).catch((e) => res.status(400).send(e));
+
+});
 
 app.listen(port, (req, res) => {
   console.log(`server is up and running on port ${port}!`);
