@@ -249,3 +249,41 @@ describe('POST /users', () => {
       .end(done);
   });
 });
+
+
+describe('POST /users/login', () => {
+  it('should log in the user and return x-auth through response header', (done) => {
+    let email = usersArray[1].email;
+    let password = usersArray[1].password;
+    request(app)
+      .post('/users/login')
+      .send({email,password})
+      .expect(200)
+      .expect((res) => {
+        expect(res.header['x-auth']).toBeTruthy()
+      })
+      .end((err,res) => {
+        if(err) {
+          return done(err);
+        }
+
+        User.findById(usersArray[1]._id).then((user) => {
+          expect(user.tokens[0].token).toBe(res.header['x-auth'])
+          done();
+        }).catch((e) => done(e));
+      });
+  });
+
+  it('should return 400 if invalid credentials', (done) => {
+    let email = usersArray[0].password;
+    let password = '123';
+    request(app)
+      .post('/users/login')
+      .send({email,password})
+      .expect(400)
+      .expect((res) => {
+        expect(res.header['x-auth']).toBeFalsy()
+      })
+      .end(done);
+  });
+});

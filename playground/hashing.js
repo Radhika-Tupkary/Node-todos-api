@@ -2,7 +2,7 @@ const {SHA256} = require('crypto-js');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
-let password = 'genabc123';
+let password = 'abhd123';
 
 // bcrypt.genSalt(10, (err, salt) => {
 //   bcrypt.hash(password, salt, (err, hash) => {
@@ -10,7 +10,7 @@ let password = 'genabc123';
 //   });
 // });
 
-let hashedPassword = '$2a$10$aLu8rJXcGQM3Hv38.vSHme4yuzpNZh5s6R0WPf2zqfmtJjdEquF8a';
+let hashedPassword = '$2a$10$eOaKbsJS9CZERzcPUkdgTOd75f9bXAqgtS5RIjRLvlzT7Xg/hDcz2';
 
 bcrypt.compare(password, hashedPassword, (err, res) => {
   console.log(res);
@@ -48,12 +48,12 @@ adding 'somesecret' - is called salting! Remember!
 All of the above code comes in with JWT - Json Web Support
 */
 
-let data = {
-  id: 15
-}
-
-let token = jwt.sign(data, '123abcd');  // header.payload.hash
-console.log(token);
-
-let decoded = jwt.verify(token, '123abcd');
-console.log(decoded);
+// let data = {
+//   id: 15
+// }
+//
+// let token = jwt.sign(data, '123abcd');  // header.payload.hash
+// console.log(token);
+//
+// let decoded = jwt.verify('$2a$10$eOaKbsJS9CZERzcPUkdgTOd75f9bXAqgtS5RIjRLvlzT7Xg/hDcz2', 'pqr987');
+// console.log(decoded);
