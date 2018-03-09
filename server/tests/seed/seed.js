@@ -42,11 +42,16 @@ const populateTodos = (done) => {
 
 const populateUsers = (done) => {
   User.remove({}).then(() => {
-    let user1 = new User(usersArray[0]).save();
-    let user2 = new User(usersArray[1]).save();
+    new User(usersArray[0]).save().then(() => {
+      return new User(usersArray[1]).save();
+    }).then(() => done());
+  });
 
-    return Promise.all([user1, user2]);
-  }).then(() => done());
+    // let user1 = new User(usersArray[0]).save();
+    // let user2 = new User(usersArray[1]).save();
+    // return Promise.all([user1, user2]);
+
+  // }).then(() => done());
 };
 
 module.exports = {usersArray, todoArray, populateTodos, populateUsers};

@@ -169,5 +169,83 @@ describe('PATCH /todos/:id', () => {
       })
       .end(done);
   });
+});
 
+describe('GET /users/me', () => {
+  it('should return user if authenticated', (done) => {
+    request(app)
+      .get('/users/me')
+      .set('x-auth', usersArray[0].tokens[0].token)
+      .expect(200)
+      .expect((res) => {
+        expect(res.body.email).toBe(usersArray[0].email)
+        expect(res.body._id).toBe(usersArray[0]._id.toHexString())
+      })
+      .end(done);
+  });
+
+  it('should return 401 if token not provided', (done) => {
+    request(app)
+      .get('/users/me')
+      .expect(401)
+      .expect((res) => {
+        expect(res.body).toEqual({})
+      })
+      .end(done);
+  });
+
+});
+
+describe('POST /users', () => {
+  it('should create a user', (done) => {
+    let email = 'example@ex.com';
+    let password = '34fgsf23';
+    request(app)
+      .post('/users')
+      .send({email,password})
+      .expect(200)
+      .expect((res) => {
+        expect(res.body.email).toBe(email)
+        expect(res.body._id).toBeTruthy()
+        expect(res.header['x-auth']).tobeTruthy
+      })
+      .end((err) => {
+        if(err){
+          return done(err);
+        }
+
+        User.findOne({email}).then((user) => {
+          expect(user).toBeTruthy()
+          expect(user.email).toBe(email)
+          expect(user.password).not.toBe(password)
+          done();
+        }).catch((e) => done(e));
+      });
+  });
+
+  it('should return validation errors if request invalid', (done) => {
+    let email = 'example123@ex.com';
+    let password = '34s3';
+    request(app)
+      .post('/users')
+      .send({email,password})
+      .expect(400)
+      .expect((res) => {
+        expect(res.body.name).toBe('ValidationError')
+      })
+      .end(done);
+  });
+
+  it('should not create a user if email in use', (done) =>{
+    let email = usersArray[0].email;
+    let password = '34s355675hfthtr';
+    request(app)
+      .post('/users')
+      .send({email,password})
+      .expect(400)
+      .expect((res) => {
+        expect(res.body.code).toBe(11000)
+      })
+      .end(done);
+  });
 });

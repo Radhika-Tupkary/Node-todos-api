@@ -44,7 +44,6 @@ UserSchema.methods.generateAuthToken = function() {  // not using ARROW function
   let access = 'auth';
   let token = jwt.sign({_id:user._id.toHexString(), access}, 'pqr987').toString();
   user.tokens = user.tokens.concat([{access,token}]);
-  console.log(user);
   return user.save().then(() => {
     return token
   });
