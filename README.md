@@ -23,10 +23,10 @@ All of the endpoints are well tested using Expect.js, Mocha and Supertest.
 
 The application is hosted on heroku and the endpoints can be accessed using Postman (Postman - an application that simplifies sending HTTP requests) by setting url = https://tranquil-plateau-37234.herokuapp.com 
 
-The env variable MONGODB_URI is as follows:
+The env variable **MONGODB_URI** is as follows:
 MONGODB_URI: mongodb://heroku_pvp8wvjt:l1rd0anana1nm4409ousdrrcoj@ds249398.mlab.com:49398/heroku_pvp8wvjt
 
-The MongoDB can be viewed using Robo 3T (GUI for MongoDB) and setting up a connection using env variable MONGODB_URI.
+The MongoDB can be viewed using **Robo 3T** (GUI for MongoDB) and setting up a connection using env variable MONGODB_URI.
 
 
 For a local set up, clone this repo and run npm install to spin a local server on port 3000.
