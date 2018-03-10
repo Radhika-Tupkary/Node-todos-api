@@ -42,7 +42,7 @@ UserSchema.methods.toJSON = function() {
 UserSchema.methods.generateAuthToken = function() {  // not using ARROW function here because arrow functions do not bind this keyword
   let user = this;
   let access = 'auth';
-  let token = jwt.sign({_id:user._id.toHexString(), access}, 'pqr987').toString();
+  let token = jwt.sign({_id:user._id.toHexString(), access}, process.env.JWT_SECRET).toString();
   user.tokens.push({access,token});
   // user.tokens = user.tokens.concat[{access,token}];
   return user.save().then(() => {
@@ -66,7 +66,7 @@ UserSchema.statics.findByToken = function(token) {
   let decoded;
 
   try {
-    decoded = jwt.verify(token, 'pqr987');
+    decoded = jwt.verify(token, process.env.JWT_SECRET);
   } catch(e) {
     return new Promise((resolve, reject) => {
       reject();

@@ -1,18 +1,9 @@
-let env = process.env.NODE_ENV || 'development';
-
-if(env === 'development'){
-  process.env.PORT = 3000;
-  process.env.MONGODB_URI = 'mongodb://localhost:27017/TodoApp';
-} else if(env === 'test') {
-  process.env.PORT = 3000;
-  process.env.MONGODB_URI = 'mongodb://localhost:27017/TodoAppTest';
-}
-
 const {mongoose} = require('./db/mongoose');
 const {Todo} = require('./models/todo');
 const {User} = require('./models/user');
 const {authenticate} = require('./middleware/authenticate');
 const bcrypt = require('bcryptjs');
+require('./config/config');
 
 const _ = require('lodash');
 
