@@ -20,18 +20,24 @@ const usersArray = [
   },{
     email:'gen@example.com',
     password: 'poiu123',
-    _id: userTwoId
+    _id: userTwoId,
+    tokens:[{
+      token: jwt.sign({_id:userTwoId, access: 'auth'}, 'pqr987').toString(),
+      access: 'auth'
+      }]
   }
 ];
 
 const todoArray = [{
   text:'First test todo',
-  _id:new ObjectID()
+  _id:new ObjectID(),
+  _creator:userOneId
   },{
   _id:new ObjectID(),
   text: 'Second test todo',
   completed:true,
-  completedAt: 333
+  completedAt: 333,
+  _creator:userTwoId
 }];
 
 const populateTodos = (done) => {
