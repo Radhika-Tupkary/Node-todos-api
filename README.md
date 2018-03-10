@@ -2,7 +2,7 @@
 
 Its a todo application using **Node.js, Express.js, Mongoose and MongoDB**. 
 
-**The Private RESTful endpoints related to todos are as follows  
+**The Private RESTful endpoints related to todos are as follows**
 
 1. To get all todos :           GET /todos      
 2. To get a single todo:        GET /todos/:id 
@@ -10,10 +10,10 @@ Its a todo application using **Node.js, Express.js, Mongoose and MongoDB**.
 4. To update an existing todo : PATCH /todos/:id
 5. To delete an existing todo : DELETE /todos/:id
 
-All the above endpoints related to todos are private so that the user can delete/update/view todos that he/she owns.
+All the above endpoints related to todos are private so that the user can delete/update/view only those todos that he/she owns.
 Todo related endpoints are accessible only when the user is authenticated, meaning logged in. 
 
-**The public RESTful endpoints to sign up for the application or logging into the application are as follows  
+**The public RESTful endpoints to sign up for the application or logging into the application are as follows**  
 
 1. POST /users    -> Sign up
 2. POST /users/login     -> Log in for existing users
